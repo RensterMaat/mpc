@@ -21,6 +21,7 @@ class System(ABC):
         step(dt): Advances the system by dt seconds.
 
     """
+
     def step(self, dt):
         self.y = solve_ivp(self.dy_dt, [0, dt], self.y).y[:, -1]
         self.t += dt
@@ -29,7 +30,7 @@ class System(ABC):
 class DoublePendulumOnCart(System):
     """
     System simulating a double pendulum on a cart.
-    
+
     Attributes:
         y (list | np.array): The state vector of the system.
         t (float): The current time of the system.
@@ -48,6 +49,7 @@ class DoublePendulumOnCart(System):
         init_plot_(): Initializes the plot.
         animate_(i): Animates the plot at frame i.
     """
+
     def __init__(self, y0, controller=None, m_cart=5, m1=1, m2=1, l1=1, l2=1, g=9.8):
         """
         Args:
@@ -77,14 +79,13 @@ class DoublePendulumOnCart(System):
         """
         Derives the equations of motion of the system.
 
-        The positions of the cart and both pendulums, along with their first and second derivatives, are 
-        represented as SymPy symbols. The Lagrangian and Hamiltonian of the system are derived symbolically and 
-        then lambdified for numerical evaluation. The equations of motion are derived symbolically and then 
+        The positions of the cart and both pendulums, along with their first and second derivatives, are
+        represented as SymPy symbols. The Lagrangian and Hamiltonian of the system are derived symbolically and
+        then lambdified for numerical evaluation. The equations of motion are derived symbolically and then
         simplified before being converted to a matrix form for numerical evaluation.
         """
         m_cart, m1, m2, l1, l2, g = self.params
         t = symbols("t")
-
 
         # setup symbolic state variables
         x_cart, theta1, theta2, force = dynamicsymbols("x_cart theta_1 theta_2 f")
@@ -149,7 +150,7 @@ class DoublePendulumOnCart(System):
             y (list | np.array): The state vector.
 
         Returns:
-            np.array: The derivative of the state vector.        
+            np.array: The derivative of the state vector.
         """
         if self.controller:
             force = self.controller(self.t, y).tolist()
@@ -166,7 +167,7 @@ class DoublePendulumOnCart(System):
     def pendulum_plot_coordinates(self):
         """
         Returns the x and y coordinates of the pendulums for plotting.
-        
+
         Returns:
             list: The x coordinates of the pendulums.
             list: The y coordinates of the pendulums.
@@ -183,7 +184,7 @@ class DoublePendulumOnCart(System):
     def cart_plot_coordinates(self):
         """
         Returns the x and y coordinates of the cart for plotting.
-        
+
         Returns:
             list: The x coordinates of the top left corner of the cart.
         """
@@ -193,11 +194,11 @@ class DoublePendulumOnCart(System):
     def visualize(self, fps=30, time_span=10):
         """
         Visualizes the double pendulum and saves the animation.
-                
+
         Args:
             fps (int, optional): The frames per second. Defaults to 30.
             time_span (int, optional): The time span of the animation in seconds. Defaults to 10.
-            
+
         Returns:
             None
         """
@@ -215,8 +216,6 @@ class DoublePendulumOnCart(System):
             [], [], "o-", lw=2, label="Time: \nHamiltonian: ", c="black"
         )
 
-        self.legend = ax.legend()
-
         t0 = time()
         self.animate_(0)
         t1 = time()
@@ -229,14 +228,14 @@ class DoublePendulumOnCart(System):
             interval=interval,
             init_func=self.init_plot_,
         )
-        self.anim.save("double_pendulum_on_cart.mp4", fps=fps)
+        self.anim.save(r"animations\\double_pendulum_on_cart.mp4", fps=fps)
 
     def init_plot_(self):
         """
         Returns the artists to be re-drawn at each frame.
-        
+
         Used internally by matplotlib.animation.FuncAnimation.
-        
+
         Returns:
             tuple: The pendulum line and the cart."""
         return self.pendulum_line, self.cart
@@ -244,12 +243,12 @@ class DoublePendulumOnCart(System):
     def animate_(self, i):
         """
         Updates the artists to be re-drawn at each frame.
-        
+
         Used internally by matplotlib.animation.FuncAnimation.
-        
+
         Args:
             i (int): The frame number.
-            
+
         Returns:
             tuple: The pendulum line and the cart.
         """

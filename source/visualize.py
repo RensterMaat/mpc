@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from model_predictive_control import MPC
 from double_pendulum import DoublePendulumOnCart
 
