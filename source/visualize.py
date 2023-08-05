@@ -1,11 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpc import MPC
-from single_pendulum_on_cart import PendulumOnCart
-from double_pendulum_on_cart import DoublePendulumOnCart
+from model_predictive_control import MPC
+from double_pendulum import DoublePendulumOnCart
 
+# initialize the pendulum in the down position
 pc = DoublePendulumOnCart("down", l1=0.5, l2=0.5, m_cart=0.6, m1=0.2, m2=0.2)
 
+# set up the MPC controller
 mpc = MPC(
     objective_equation=pc.L,
     ode_equation=pc.equations_of_motion,
@@ -17,5 +18,8 @@ mpc = MPC(
     n_elements=40,
 )
 
+# attach the controller to the pendulum
 pc.controller = mpc
+
+# run the simulation
 pc.visualize()
