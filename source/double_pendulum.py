@@ -228,7 +228,7 @@ class DoublePendulumOnCart(System):
             interval=interval,
             init_func=self.init_plot_,
         )
-        self.anim.save(r"animations\\double_pendulum_on_cart.mp4", fps=fps)
+        self.anim.save(r"animations\\double_pendulum_on_cart.gif", fps=fps)
 
     def init_plot_(self):
         """
